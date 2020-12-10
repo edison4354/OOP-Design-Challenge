@@ -24,8 +24,49 @@ class Player(Block):
 		self.rect.y += self.movement
 		self.screen_constrain()
 
-# class Ball(Block):
-#   def __init__():
+class Ball(Block):
+	def __init__(self,path,x_pos,y_pos,speed_x,speed_y,paddles):
+		super().__init__(path,x_pos,y_pos)
+		self.speed_x = speed_x * random.choice((-1,1))
+		self.speed_y = speed_y * random.choice((-1,1))
+		self.paddles = paddles
+		self.active = False
+
+  # Moves the x and y position of the ball and detectis
+	def update(self):
+		if self.active:
+			self.rect.x += self.speed_x
+			self.rect.y += self.speed_y
+			self.collisions()
+		else:
+			self.restart_counter()
+		
+	def collisions(self):
+    # Checks if the ball collides with either the top or bottom of the screen
+		if self.rect.top <= 0 or self.rect.bottom >= screen_height:
+			self.speed_y *= -1
+
+    # Checks if the ball collides with the paddle
+		if pygame.sprite.spritecollide(self,self.paddles,False):
+			collision_paddle = pygame.sprite.spritecollide(self,self.paddles,False)[0].rect
+			if abs(self.rect.right - collision_paddle.left) < 10 and self.speed_x > 0:
+				self.speed_x *= -1
+			if abs(self.rect.left - collision_paddle.right) < 10 and self.speed_x < 0:
+				self.speed_x *= -1
+			if abs(self.rect.top - collision_paddle.bottom) < 10 and self.speed_y < 0:
+				self.rect.top = collision_paddle.bottom
+				self.speed_y *= -1
+			if abs(self.rect.bottom - collision_paddle.top) < 10 and self.speed_y > 0:
+				self.rect.bottom = collision_paddle.top
+				self.speed_y *= -1
+
+	def reset_ball(self):
+    # Sets the ball back to the center and moves the ball to a random directions 
+		self.active = True
+		self.speed_x *= random.choice((-1,1)) 
+		self.speed_y *= random.choice((-1,1))
+		self.rect.center = (screen_width/2,screen_height/2)
+
 
 # class Opponent(Block):
 #   def __init__():
