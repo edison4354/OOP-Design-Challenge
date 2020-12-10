@@ -67,9 +67,23 @@ class Ball(Block):
 		self.speed_y *= random.choice((-1,1))
 		self.rect.center = (screen_width/2,screen_height/2)
 
+class Opponent(Block):
+	def __init__(self,path,x_pos,y_pos,speed):
+		super().__init__(path,x_pos,y_pos)
+		self.speed = speed
 
-# class Opponent(Block):
-#   def __init__():
+  # This function is made for the paddle to follow the ball y
+	def update(self,ball_group):
+		if self.rect.top < ball_group.sprite.rect.y:
+			self.rect.y += self.speed
+		if self.rect.bottom > ball_group.sprite.rect.y:
+			self.rect.y -= self.speed
+		self.constrain()
+
+  # Keeps the paddle from going out of the screen
+	def constrain(self):
+		if self.rect.top <= 0: self.rect.top = 0
+		if self.rect.bottom >= screen_height: self.rect.bottom = screen_height
 
 # class GameManager:
 
@@ -90,8 +104,14 @@ middle_strip = pygame.Rect(screen_width/2 - 2, 0, 4, screen_height)
 
 # Game Objects
 player = Player('Paddle.png', screen_width - 20, screen_height/2, 6)
+opponent = Opponent('Paddle.png', 20, screen_width/2, 6)
 paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
+paddle_group.add(opponent)
+
+ball = Ball('Ball.png', screen_width/2, screen_height/2, 4, 4, paddle_group)
+ball_sprite = pygame.sprite.GroupSingle()
+ball_sprite.add(ball)
 
 while True:
   # Handling input
