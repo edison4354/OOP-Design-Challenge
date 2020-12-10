@@ -1,40 +1,33 @@
 import pygame, sys, random
 
-class Block():
-  def __init__(self, x_pos, y_pos, width, height):
-    self.rect = pygame.Rect(x_pos, y_pos, width, height)
+# class Block(pygame.sprite.Sprite):
+#   def __init__():
 
-class Player(Block):
-	def __init__(self,x_pos,y_pos,speed):
-		super().__init__(x_pos,y_pos, 10, 140)
-		self.speed = speed
+# class Player(Block):
+#   def __init__():
 
-	def screen_constrain(self):
-		if self.rect.top <= 0:
-			self.rect.top = 0
-		if self.rect.bottom >= screen_height:
-			self.rect.bottom = screen_height
+# class Ball(Block):
+#   def __init__():
 
-  def update():
-    self.rect.y += self.speed
+# class Opponent(Block):
+#   def __init__():
 
-# General setup
+# class GameManager:
+
+# Inital setup for pygame
 pygame.init()
 clock = pygame.time.Clock()
 
-# Setting up the main window
+# Setting up the main screen for displaying window
 screen_width = 1280
 screen_height = 960
-screen = pygame.display.set_mode((screen_width,screen_height))
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong')
 
-
-
-# Game objects
-player = Player(screen_width - 20,screen_height/2, 0)
-print(player)
-# opponent = Opponent(screen_width - 20, screen_height/2 - 70, 7)
-# ball = Ball(10, screen_height/2 - 70,)
+# Global Variables
+bg_color = pygame.Color("black")
+accent_color = pygame.Color("white")
+middle_strip = pygame.Rect(screen_width/2 - 2, 0, 4, screen_height)
 
 while True:
   # Handling input
@@ -45,14 +38,14 @@ while True:
 
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_DOWN:
-        player.speed += 7
+        player.movement += player.speed
       if event.key == pygame.K_UP:
-        player.speed -= 7 
+        player.movement -= player.speed
     if event.type == pygame.KEYUP:
       if event.key == pygame.K_DOWN:
-        player.speed -= 7
+        player.movement -= player.speed
       if event.key == pygame.K_UP:
-        player.speed += 7
+        player.movement += player.speed
 
   # Rendering and updating the window
   pygame.display.flip()
